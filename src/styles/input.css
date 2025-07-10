@@ -1,0 +1,67 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* BuildKit UI Custom Styles */
+@layer base {
+  :root {
+    --buildkit-primary: theme('colors.buildkit.500');
+    --buildkit-primary-hover: theme('colors.buildkit.600');
+    --buildkit-primary-focus: theme('colors.buildkit.700');
+    --buildkit-secondary: theme('colors.gray.500');
+    --buildkit-success: theme('colors.green.500');
+    --buildkit-warning: theme('colors.yellow.500');
+    --buildkit-danger: theme('colors.red.500');
+    --buildkit-info: theme('colors.blue.500');
+  }
+
+  .dark {
+    --buildkit-primary: theme('colors.buildkit.400');
+    --buildkit-primary-hover: theme('colors.buildkit.500');
+    --buildkit-primary-focus: theme('colors.buildkit.600');
+    --buildkit-secondary: theme('colors.gray.400');
+  }
+}
+
+@layer components {
+  .buildkit-button {
+    @apply inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 transition-all duration-200;
+  }
+
+  .buildkit-input {
+    @apply block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-buildkit-500 focus:border-buildkit-500 sm:text-sm;
+  }
+
+  .buildkit-card {
+    @apply bg-white overflow-hidden shadow rounded-lg divide-y divide-gray-200;
+  }
+
+  .dark .buildkit-card {
+    @apply bg-gray-800 divide-gray-700;
+  }
+}
+
+@layer utilities {
+  .buildkit-animate-in {
+    animation: fadeIn 0.3s ease-in-out;
+  }
+
+  .buildkit-tracking-enabled {
+    position: relative;
+  }
+
+  .buildkit-tracking-enabled::after {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    border-radius: inherit;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s;
+  }
+
+  .buildkit-tracking-enabled:active::after {
+    @apply bg-buildkit-500;
+    opacity: 0.1;
+  }
+}
