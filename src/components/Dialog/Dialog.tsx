@@ -27,7 +27,7 @@ export const Dialog: React.FC<DialogProps> = ({
   const { theme } = useTheme();
   const { trackEvent } = useTracking({ 
     componentType: 'Dialog',
-    componentProps: trackingMetadata 
+    props: trackingMetadata 
   });
 
   useEffect(() => {

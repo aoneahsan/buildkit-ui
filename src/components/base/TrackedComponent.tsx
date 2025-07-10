@@ -6,6 +6,7 @@ import {
   trackComponentRender,
   trackInteraction,
   trackError,
+  trackErrorEvent,
 } from '../../tracking';
 import { logInteractionBreadcrumb } from '../../tracking/errors';
 
@@ -63,7 +64,7 @@ export abstract class TrackedComponent<
     this.setState({ hasError: true, error } as S);
     
     if (this.isTrackingEnabled()) {
-      trackError(error, this.componentType, {
+      trackErrorEvent(error, this.componentType, {
         componentId: this.componentId,
         errorInfo: errorInfo.componentStack,
         props: this.getTrackableProps(),
@@ -237,7 +238,7 @@ export abstract class TrackedComponent<
         return result;
       } catch (error) {
         if (this.isTrackingEnabled()) {
-          trackError(error as Error, this.componentType, {
+          trackErrorEvent(error as Error, this.componentType, {
             eventName,
             componentId: this.componentId,
           });

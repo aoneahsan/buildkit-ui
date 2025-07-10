@@ -31,7 +31,7 @@ export const Checkbox: React.FC<CheckboxProps> = ({
   const { theme } = useTheme();
   const { trackEvent } = useTracking({ 
     componentType: 'Checkbox',
-    componentProps: trackingMetadata 
+    props: trackingMetadata 
   });
   const ariaProps = useAriaLabel({ label, required });
 

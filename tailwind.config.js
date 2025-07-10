@@ -51,10 +51,7 @@ module.exports = {
       },
     },
   },
-  plugins: [
-    require('@tailwindcss/forms'),
-    require('@tailwindcss/typography'),
-  ],
+  plugins: [],
   corePlugins: {
     preflight: false, // Disable to avoid conflicts with PrimeReact
   },

@@ -42,7 +42,7 @@ export const Dropdown: React.FC<DropdownProps> = ({
   const { theme } = useTheme();
   const { trackEvent } = useTracking({ 
     componentType: 'Dropdown',
-    componentProps: trackingMetadata 
+    props: trackingMetadata 
   });
   const ariaProps = useAriaLabel({ label, required });
 

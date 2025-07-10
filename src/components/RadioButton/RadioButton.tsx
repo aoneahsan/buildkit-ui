@@ -34,7 +34,7 @@ export const RadioButton: React.FC<RadioButtonProps> = ({
   const { theme } = useTheme();
   const { trackEvent } = useTracking({ 
     componentType: 'RadioButton',
-    componentProps: trackingMetadata 
+    props: trackingMetadata 
   });
   const ariaProps = useAriaLabel({ label, required });
 

@@ -22,7 +22,7 @@ export const Form: React.FC<FormProps> = ({
 }) => {
   const { trackEvent } = useTracking({ 
     componentType: 'Form',
-    componentProps: trackingMetadata 
+    props: trackingMetadata 
   });
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {

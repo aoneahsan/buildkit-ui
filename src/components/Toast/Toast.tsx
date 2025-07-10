@@ -32,7 +32,7 @@ export const Toast = forwardRef<ToastRef, ToastProps>(({
   const { theme } = useTheme();
   const { trackEvent } = useTracking({ 
     componentType: 'Toast',
-    componentProps: trackingMetadata 
+    props: trackingMetadata 
   });
   const toastRef = useRef<PrimeToast>(null);
 

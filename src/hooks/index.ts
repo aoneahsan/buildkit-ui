@@ -4,3 +4,4 @@ export * from '../providers/TrackingProvider';
 export * from './useAuth';
 export * from './useOffline';
 export * from './usePerformance';
+export * from './useAriaLabel';

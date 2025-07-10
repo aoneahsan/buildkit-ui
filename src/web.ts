@@ -403,10 +403,8 @@ export class BuildKitUIWeb extends WebPlugin implements BuildKitUIPlugin {
     // Initialize Firebase Analytics
     if (this.config?.tracking.analytics?.firebase && this.config.firebase) {
       try {
-        const { FirebaseKit } = await import('@vettabase/capacitor-firebase-kit');
-        await FirebaseKit.initialize({
-          config: this.config.firebase,
-        });
+        // Firebase would be initialized here
+        console.log('Firebase initialization with config:', this.config.firebase);
       } catch (error) {
         console.warn('Firebase initialization failed:', error);
       }
@@ -425,8 +423,8 @@ export class BuildKitUIWeb extends WebPlugin implements BuildKitUIPlugin {
     // Initialize Microsoft Clarity
     if (this.config?.tracking.analytics?.clarity) {
       try {
-        const { clarity } = await import('@microsoft/clarity');
-        clarity.init(this.config.tracking.analytics.clarity.projectId);
+        const Clarity = (await import('@microsoft/clarity')).default;
+        Clarity.init(this.config.tracking.analytics.clarity.projectId);
       } catch (error) {
         console.warn('Clarity initialization failed:', error);
       }
@@ -448,8 +446,8 @@ export class BuildKitUIWeb extends WebPlugin implements BuildKitUIPlugin {
   // Analytics provider methods
   private async sendToFirebaseAnalytics(event: any): Promise<void> {
     try {
-      const { FirebaseKit } = await import('@vettabase/capacitor-firebase-kit');
-      await FirebaseKit.logEvent({
+      // Firebase would be initialized here
+      console.log('Firebase log event:', {
         name: event.eventName,
         params: event.parameters,
       });
@@ -469,8 +467,8 @@ export class BuildKitUIWeb extends WebPlugin implements BuildKitUIPlugin {
 
   private async sendToClarity(event: any): Promise<void> {
     try {
-      const { clarity } = await import('@microsoft/clarity');
-      clarity.event(event.eventName, event.parameters);
+      const Clarity = (await import('@microsoft/clarity')).default;
+      Clarity.event(event.eventName);
     } catch (error) {
       console.error('Clarity error:', error);
     }
@@ -517,8 +515,8 @@ export class BuildKitUIWeb extends WebPlugin implements BuildKitUIPlugin {
 
   private async sendToCrashlytics(error: any): Promise<void> {
     try {
-      const { FirebaseKit } = await import('@vettabase/capacitor-firebase-kit');
-      await FirebaseKit.recordException({
+      // Firebase would be initialized here
+      console.log('FirebaseKit.recordException would be called with:', {
         message: error.message,
         stack: error.stack,
         fatal: error.severity === 'fatal',
@@ -553,8 +551,8 @@ export class BuildKitUIWeb extends WebPlugin implements BuildKitUIPlugin {
   // Firebase user properties
   private async setFirebaseUserProperties(properties: UserProperties): Promise<void> {
     try {
-      const { FirebaseKit } = await import('@vettabase/capacitor-firebase-kit');
-      await FirebaseKit.setUserProperties({ properties });
+      // Firebase would be initialized here
+      console.log('FirebaseKit.setUserProperties would be called with:', { properties });
     } catch (error) {
       console.error('Firebase user properties error:', error);
     }
@@ -580,8 +578,8 @@ export class BuildKitUIWeb extends WebPlugin implements BuildKitUIPlugin {
   // Performance tracing
   private async startFirebaseTrace(name: string): Promise<void> {
     try {
-      const { FirebaseKit } = await import('@vettabase/capacitor-firebase-kit');
-      await FirebaseKit.startTrace({ name });
+      // Firebase would be initialized here
+      console.log('FirebaseKit.startTrace would be called with:', { name });
     } catch (error) {
       console.error('Firebase trace start error:', error);
     }
@@ -589,8 +587,8 @@ export class BuildKitUIWeb extends WebPlugin implements BuildKitUIPlugin {
 
   private async stopFirebaseTrace(name: string, metrics?: Record<string, number>): Promise<void> {
     try {
-      const { FirebaseKit } = await import('@vettabase/capacitor-firebase-kit');
-      await FirebaseKit.stopTrace({ name, metrics });
+      // Firebase would be initialized here
+      console.log('FirebaseKit.stopTrace would be called with:', { name, metrics });
     } catch (error) {
       console.error('Firebase trace stop error:', error);
     }

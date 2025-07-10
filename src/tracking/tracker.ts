@@ -158,7 +158,7 @@ export async function trackEvent(event: TrackingEvent): Promise<void> {
 /**
  * Track an error
  */
-export async function trackError(
+export async function trackErrorEvent(
   error: Error | ErrorEvent,
   componentType?: string,
   context?: Record<string, any>

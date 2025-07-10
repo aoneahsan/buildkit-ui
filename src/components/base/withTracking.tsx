@@ -67,7 +67,7 @@ export function withTracking<P extends object>(
 
     // Track component mount
     useEffect(() => {
-      if (!trackingEnabled) return;
+      if (!trackingEnabled) return () => {};
 
       const trackableProps = getTrackableProps(
         componentProps,

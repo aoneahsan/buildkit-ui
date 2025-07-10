@@ -50,7 +50,7 @@ export const DataTable: React.FC<DataTableProps> = ({
   const { theme } = useTheme();
   const { trackEvent } = useTracking({ 
     componentType: 'DataTable',
-    componentProps: trackingMetadata 
+    props: trackingMetadata 
   });
   
   const [selection, setSelection] = useState<any>(null);

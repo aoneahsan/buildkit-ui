@@ -25,7 +25,7 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
   const { theme } = useTheme();
   const { trackEvent } = useTracking({ 
     componentType: 'ProgressBar',
-    componentProps: trackingMetadata 
+    props: trackingMetadata 
   });
 
   useEffect(() => {

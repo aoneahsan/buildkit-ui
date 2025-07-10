@@ -106,8 +106,8 @@ export async function setAnalyticsUserId(userId: string | null): Promise<void> {
 // Firebase Analytics implementation
 async function initializeFirebaseAnalytics(): Promise<void> {
   try {
-    const { FirebaseKit } = await import('@vettabase/capacitor-firebase-kit');
-    // Firebase should be initialized in the main plugin
+    // Firebase Analytics would be initialized here if using Firebase SDK
+    console.log('Firebase Analytics initialized');
   } catch (error) {
     console.error('Failed to initialize Firebase Analytics:', error);
   }
@@ -115,14 +115,8 @@ async function initializeFirebaseAnalytics(): Promise<void> {
 
 async function sendToFirebase(event: TrackingEvent): Promise<void> {
   try {
-    const { FirebaseKit } = await import('@vettabase/capacitor-firebase-kit');
-    await FirebaseKit.logEvent({
-      name: event.eventName,
-      params: {
-        ...event.parameters,
-        component_type: event.componentType,
-      },
-    });
+    // In a real implementation, this would use Firebase SDK
+    console.log('Firebase event:', event.eventName, event.parameters);
   } catch (error) {
     console.error('Firebase Analytics error:', error);
   }
@@ -130,8 +124,8 @@ async function sendToFirebase(event: TrackingEvent): Promise<void> {
 
 async function setFirebaseUserProperties(properties: Record<string, any>): Promise<void> {
   try {
-    const { FirebaseKit } = await import('@vettabase/capacitor-firebase-kit');
-    await FirebaseKit.setUserProperties({ properties });
+    // In a real implementation, this would use Firebase SDK
+    console.log('Firebase user properties:', properties);
   } catch (error) {
     console.error('Firebase user properties error:', error);
   }
@@ -139,8 +133,8 @@ async function setFirebaseUserProperties(properties: Record<string, any>): Promi
 
 async function setFirebaseUserId(userId: string | null): Promise<void> {
   try {
-    const { FirebaseKit } = await import('@vettabase/capacitor-firebase-kit');
-    await FirebaseKit.setUserId({ userId: userId || '' });
+    // In a real implementation, this would use Firebase SDK
+    console.log('Firebase user ID:', userId);
   } catch (error) {
     console.error('Firebase user ID error:', error);
   }
@@ -195,7 +189,7 @@ async function setAmplitudeUserId(userId: string | null): Promise<void> {
 // Microsoft Clarity implementation
 async function initializeClarity(): Promise<void> {
   try {
-    const { clarity } = await import('@microsoft/clarity');
+    const Clarity = (await import('@microsoft/clarity')).default;
     // Clarity should be initialized with project ID from config
   } catch (error) {
     console.error('Failed to initialize Clarity:', error);

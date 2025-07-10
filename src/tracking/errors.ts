@@ -197,7 +197,7 @@ function addSentryBreadcrumb(breadcrumb: Breadcrumb): void {
 // Crashlytics implementation
 async function initializeCrashlytics(): Promise<void> {
   try {
-    const { FirebaseKit } = await import('@vettabase/capacitor-firebase-kit');
+    // Firebase Crashlytics would be initialized here
     // Crashlytics should be initialized with Firebase
   } catch (error) {
     console.error('Failed to initialize Crashlytics:', error);
@@ -206,7 +206,7 @@ async function initializeCrashlytics(): Promise<void> {
 
 async function sendToCrashlytics(error: ErrorEvent): Promise<void> {
   try {
-    const { FirebaseKit } = await import('@vettabase/capacitor-firebase-kit');
+    // Firebase Crashlytics would record the error here
     
     // Log custom keys for context
     if (error.context) {

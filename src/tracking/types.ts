@@ -1,4 +1,5 @@
 import type { TrackingEvent, ErrorEvent, PlatformInfo } from '../definitions';
+export type { PlatformInfo };
 
 export interface TrackedComponent {
   componentType: string;

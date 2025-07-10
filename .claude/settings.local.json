@@ -65,7 +65,12 @@
       "WebFetch(domain:deno.com)",
       "WebFetch(domain:bun.sh)",
       "Bash(chmod:*)",
-      "Bash(touch:*)"
+      "Bash(touch:*)",
+      "Bash(npm view:*)",
+      "Bash(npm search:*)",
+      "Bash(npx rollup:*)",
+      "Bash(npm publish:*)",
+      "Bash(node:*)"
     ],
     "deny": []
   }

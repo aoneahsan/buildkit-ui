@@ -106,7 +106,7 @@ export function useTracking(options: UseTrackingOptions): UseTrackingResult {
 
   // Track component lifecycle
   useEffect(() => {
-    if (!trackingEnabled) return;
+    if (!trackingEnabled) return () => {};
 
     // Track mount
     trackComponentMount(componentType, componentId, props);

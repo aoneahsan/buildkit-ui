@@ -27,7 +27,7 @@ export const Card: React.FC<CardProps> = ({
   const { theme } = useTheme();
   const { trackEvent } = useTracking({ 
     componentType: 'Card',
-    componentProps: trackingMetadata 
+    props: trackingMetadata 
   });
 
   const handleClick = (e: React.MouseEvent) => {
