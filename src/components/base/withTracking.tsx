@@ -37,7 +37,7 @@ export interface WithTrackingOptions {
 export function withTracking<P extends object>(
   Component: ComponentType<P>,
   options: WithTrackingOptions = {}
-): ComponentType<P & ComponentTrackingProps> {
+): any {
   const {
     componentType = Component.displayName || Component.name || 'Unknown',
     trackEvents = ['onClick', 'onSubmit', 'onChange'],
@@ -126,19 +126,17 @@ export function withTracking<P extends object>(
         setError(new Error(event.message));
         
         if (trackingEnabled) {
-          trackError(
-            {
-              message: event.message,
-              stack: event.error?.stack,
-              componentType,
-              context: {
-                componentId,
-                filename: event.filename,
-                lineno: event.lineno,
-                colno: event.colno,
-              },
-            }
-          );
+          trackError({
+            message: event.message,
+            stack: event.error?.stack,
+            componentType,
+            context: {
+              componentId,
+              filename: event.filename,
+              lineno: event.lineno,
+              colno: event.colno,
+            },
+          });
         }
       };
 
@@ -160,7 +158,7 @@ export function withTracking<P extends object>(
 
   TrackedComponent.displayName = `Tracked(${componentType})`;
 
-  return TrackedComponent;
+  return TrackedComponent as ComponentType<P & ComponentTrackingProps>;
 }
 
 /**
@@ -268,9 +266,14 @@ function createTrackedHandler(
       return result;
     } catch (error) {
       if (trackingEnabled) {
-        trackError(error as Error, componentType, {
-          eventName,
-          componentId,
+        trackError({
+          message: (error as Error).message,
+          stack: (error as Error).stack,
+          componentType,
+          context: {
+            eventName,
+            componentId,
+          },
         });
       }
       throw error;

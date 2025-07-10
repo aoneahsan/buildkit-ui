@@ -15,8 +15,12 @@ export function useOffline(): UseOfflineResult {
   useEffect(() => {
     checkNetworkStatus();
 
-    const listener = Network.addListener('networkStatusChange', (status) => {
+    let removeListener: (() => void) | undefined;
+    
+    Network.addListener('networkStatusChange', (status) => {
       setIsOnline(status.connected);
+    }).then(listener => {
+      removeListener = () => listener.remove();
     });
 
     const interval = setInterval(() => {
@@ -25,7 +29,7 @@ export function useOffline(): UseOfflineResult {
     }, 5000);
 
     return () => {
-      listener.remove();
+      if (removeListener) removeListener();
       clearInterval(interval);
     };
   }, []);

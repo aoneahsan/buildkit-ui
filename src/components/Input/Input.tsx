@@ -6,7 +6,7 @@ import { twMerge } from 'tailwind-merge';
 import { useTracking } from '../base/useTracking';
 import type { ComponentTrackingProps } from '../../tracking/types';
 
-export interface InputProps extends Omit<InputTextProps, 'ref'>, ComponentTrackingProps {
+export interface InputProps extends Omit<InputTextProps, 'ref' | 'onInput'>, ComponentTrackingProps {
   /**
    * Input label
    */
@@ -99,7 +99,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
   const combinedRef = ref || inputRef;
   const [internalValue, setInternalValue] = useState(value || defaultValue || '');
   const [isFocused, setIsFocused] = useState(false);
-  const debounceTimerRef = useRef<NodeJS.Timeout>();
+  const debounceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Initialize tracking
   const {
@@ -253,11 +253,10 @@ export const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
       <div className="relative">
         <InputText
           {...restProps}
-          {...inputProps}
           ref={combinedRef as any}
           id={id || componentId}
           className={inputClasses}
-          value={internalValue}
+          value={String(internalValue || '')}
           onChange={handleChange}
           onFocus={handleFocus}
           onBlur={handleBlur}

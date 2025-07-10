@@ -15,5 +15,18 @@ export * from './hooks';
 export * from './providers';
 export * from './pages';
 export * from './utils';
-export * from './tracking';
+export { 
+  trackEvent,
+  trackError,
+  trackComponentMount,
+  trackComponentUnmount,
+  trackComponentRender,
+  trackInteraction,
+  trackPerformance,
+  initializeTracking,
+  getTrackingContext,
+  addBreadcrumb,
+  initializeAnalytics,
+  initializeErrorTracking
+} from './tracking';
 export * from './theme';

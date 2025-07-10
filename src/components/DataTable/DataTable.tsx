@@ -186,27 +186,6 @@ export const DataTable: React.FC<DataTableProps> = ({
           table: { className: 'w-full' },
           thead: { className: 'bg-gray-50 dark:bg-gray-900/50' },
           tbody: { className: 'bg-white dark:bg-gray-800' },
-          tr: { 
-            className: cn(
-              'border-b border-gray-200 dark:border-gray-700',
-              'hover:bg-gray-50 dark:hover:bg-gray-700/50',
-              'transition-colors duration-150'
-            )
-          },
-          th: { 
-            className: cn(
-              'px-6 py-3',
-              'text-left text-xs font-medium',
-              'text-gray-500 dark:text-gray-400',
-              'uppercase tracking-wider'
-            )
-          },
-          td: { 
-            className: cn(
-              'px-6 py-4',
-              'text-sm text-gray-900 dark:text-white'
-            )
-          },
           loadingOverlay: { 
             className: 'bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm' 
           },
@@ -217,7 +196,7 @@ export const DataTable: React.FC<DataTableProps> = ({
               'border-t border-gray-200 dark:border-gray-700',
               'bg-gray-50 dark:bg-gray-900/50'
             )
-          }
+          } as any
         }}
       >
         {columns.map((col) => (

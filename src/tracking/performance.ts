@@ -285,7 +285,7 @@ export function initializeWebVitals(): void {
           tcpConnect: navigation.connectEnd - navigation.connectStart,
           request: navigation.responseStart - navigation.requestStart,
           response: navigation.responseEnd - navigation.responseStart,
-          domProcessing: navigation.domComplete - navigation.domLoading,
+          domProcessing: navigation.domComplete - navigation.domInteractive,
         },
       });
     }

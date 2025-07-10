@@ -198,11 +198,14 @@ async function initializeClarity(): Promise<void> {
 
 async function sendToClarity(event: TrackingEvent): Promise<void> {
   try {
-    const { clarity } = await import('@microsoft/clarity');
-    clarity.event(event.eventName, {
-      ...event.parameters,
-      component_type: event.componentType,
-    });
+    // Microsoft Clarity doesn't export a named 'clarity' function
+    // Instead, it's initialized through a global script
+    if ((window as any).clarity) {
+      (window as any).clarity('event', event.eventName, {
+        ...event.parameters,
+        component_type: event.componentType,
+      });
+    }
   } catch (error) {
     console.error('Clarity error:', error);
   }

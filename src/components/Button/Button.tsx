@@ -6,7 +6,7 @@ import { twMerge } from 'tailwind-merge';
 import { useTracking } from '../base/useTracking';
 import type { ComponentTrackingProps } from '../../tracking/types';
 
-export interface ButtonProps extends Omit<PrimeButtonProps, 'ref'>, ComponentTrackingProps {
+export interface ButtonProps extends Omit<PrimeButtonProps, 'ref' | 'size'>, ComponentTrackingProps {
   /**
    * Button variant
    */

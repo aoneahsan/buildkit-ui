@@ -111,11 +111,12 @@ export function ThemeProvider({ config, children }: ThemeProviderProps) {
     } else {
       setIsDark(mode === 'dark');
       applyTheme(mode);
+      return undefined;
     }
   }, [mode]);
 
   const applyTheme = (themeName: string) => {
-    const theme = themes[themeName] || themes.light;
+    const theme = themes[themeName as keyof typeof themes] || themes.light;
     setCurrentTheme(theme);
 
     // Apply CSS variables
@@ -128,20 +129,20 @@ export function ThemeProvider({ config, children }: ThemeProviderProps) {
 
       // Apply color variables
       Object.entries(theme.colors).forEach(([key, value]) => {
-        root.style.setProperty(`--buildkit-${key}`, value);
+        root.style.setProperty(`--buildkit-${key}`, value as string);
       });
 
       // Apply font variables
       if (theme.fonts) {
         Object.entries(theme.fonts).forEach(([key, value]) => {
-          root.style.setProperty(`--buildkit-font-${key}`, value);
+          root.style.setProperty(`--buildkit-font-${key}`, value as string);
         });
       }
 
       // Apply spacing variables
       if (theme.spacing) {
         Object.entries(theme.spacing).forEach(([key, value]) => {
-          root.style.setProperty(`--buildkit-spacing-${key}`, value);
+          root.style.setProperty(`--buildkit-spacing-${key}`, value as string);
         });
       }
     }
@@ -171,7 +172,7 @@ export function ThemeProvider({ config, children }: ThemeProviderProps) {
     setMode,
     theme: currentTheme,
     setTheme: (theme: ThemeDefinition) => {
-      themes[theme.name] = theme;
+      (themes as any)[theme.name] = theme;
       if (currentTheme?.name === theme.name) {
         applyTheme(theme.name);
       }

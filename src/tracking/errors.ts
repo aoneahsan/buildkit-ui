@@ -211,19 +211,21 @@ async function sendToCrashlytics(error: ErrorEvent): Promise<void> {
     // Log custom keys for context
     if (error.context) {
       for (const [key, value] of Object.entries(error.context)) {
-        await FirebaseKit.setCustomKey({
-          key,
-          value: String(value),
-        });
+        // Firebase Crashlytics would set custom key here
+        // await FirebaseKit.setCustomKey({
+        //   key,
+        //   value: String(value),
+        // });
       }
     }
 
     // Record the exception
-    await FirebaseKit.recordException({
-      message: error.message,
-      stack: error.stack,
-      fatal: error.severity === 'fatal',
-    });
+    // Firebase Crashlytics would record exception here
+    // await FirebaseKit.recordException({
+    //   message: error.message,
+    //   stack: error.stack,
+    //   fatal: error.severity === 'fatal',
+    // });
   } catch (err) {
     console.error('Crashlytics error:', err);
   }

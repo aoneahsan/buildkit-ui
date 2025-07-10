@@ -71,7 +71,13 @@
       "Bash(npx rollup:*)",
       "Bash(npm publish:*)",
       "Bash(node:*)",
-      "Bash(npm pkg:*)"
+      "Bash(npm pkg:*)",
+      "Bash(yarn install)",
+      "Bash(npx tailwindcss:*)",
+      "Bash(rollup:*)",
+      "Bash(yarn tailwindcss:*)",
+      "Bash(yarn list:*)",
+      "Bash(yarn test)"
     ],
     "deny": []
   }

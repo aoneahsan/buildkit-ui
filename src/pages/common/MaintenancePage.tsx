@@ -40,7 +40,7 @@ export const MaintenancePage: React.FC<MaintenancePageProps> = ({
   }, [trackEvent]);
 
   useEffect(() => {
-    if (!estimatedTime) return;
+    if (!estimatedTime) return undefined;
 
     const updateTimeRemaining = () => {
       const now = new Date();

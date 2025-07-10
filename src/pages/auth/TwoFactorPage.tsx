@@ -54,6 +54,7 @@ export const TwoFactorPage: React.FC<TwoFactorPageProps> = ({
       const timer = setTimeout(() => setResendTimer(resendTimer - 1), 1000);
       return () => clearTimeout(timer);
     }
+    return undefined;
   }, [resendTimer]);
 
   const handleCodeChange = (index: number, value: string) => {
@@ -69,7 +70,13 @@ export const TwoFactorPage: React.FC<TwoFactorPageProps> = ({
       setCode(newCode);
       
       // Focus last filled input or next empty one
-      const lastFilledIndex = newCode.findLastIndex(digit => digit !== '');
+      let lastFilledIndex = -1;
+      for (let i = newCode.length - 1; i >= 0; i--) {
+        if (newCode[i] !== '') {
+          lastFilledIndex = i;
+          break;
+        }
+      }
       const nextIndex = Math.min(lastFilledIndex + 1, codeLength - 1);
       inputRefs.current[nextIndex]?.focus();
     } else {
@@ -181,7 +188,9 @@ export const TwoFactorPage: React.FC<TwoFactorPageProps> = ({
             {code.map((digit, index) => (
               <input
                 key={index}
-                ref={(el) => (inputRefs.current[index] = el)}
+                ref={(el) => {
+                  if (el) inputRefs.current[index] = el;
+                }}
                 type="text"
                 inputMode="numeric"
                 pattern="[0-9]"

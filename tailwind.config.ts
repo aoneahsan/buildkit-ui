@@ -1,5 +1,6 @@
-/** @type {import('tailwindcss').Config} */
-module.exports = {
+import type { Config } from 'tailwindcss'
+
+const config: Config = {
   content: [
     "./src/**/*.{js,jsx,ts,tsx}",
     "./dist/**/*.{js,jsx}",
@@ -55,4 +56,6 @@ module.exports = {
   corePlugins: {
     preflight: false, // Disable to avoid conflicts with PrimeReact
   },
-};
+}
+
+export default config

@@ -6,7 +6,7 @@
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "jsx": "react-jsx",
-    "lib": ["DOM", "ES2020"],
+    "lib": ["DOM", "ES2023"],
     "module": "ES2020",
     "moduleResolution": "node",
     "noFallthroughCasesInSwitch": true,

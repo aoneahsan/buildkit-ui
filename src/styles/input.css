@@ -5,39 +5,68 @@
 /* BuildKit UI Custom Styles */
 @layer base {
   :root {
-    --buildkit-primary: theme('colors.buildkit.500');
-    --buildkit-primary-hover: theme('colors.buildkit.600');
-    --buildkit-primary-focus: theme('colors.buildkit.700');
-    --buildkit-secondary: theme('colors.gray.500');
-    --buildkit-success: theme('colors.green.500');
-    --buildkit-warning: theme('colors.yellow.500');
-    --buildkit-danger: theme('colors.red.500');
-    --buildkit-info: theme('colors.blue.500');
+    --buildkit-primary: #0ea5e9;
+    --buildkit-primary-hover: #0284c7;
+    --buildkit-primary-focus: #0369a1;
+    --buildkit-secondary: #6b7280;
+    --buildkit-success: #22c55e;
+    --buildkit-warning: #f59e0b;
+    --buildkit-danger: #ef4444;
+    --buildkit-info: #3b82f6;
   }
 
   .dark {
-    --buildkit-primary: theme('colors.buildkit.400');
-    --buildkit-primary-hover: theme('colors.buildkit.500');
-    --buildkit-primary-focus: theme('colors.buildkit.600');
-    --buildkit-secondary: theme('colors.gray.400');
+    --buildkit-primary: #38bdf8;
+    --buildkit-primary-hover: #0ea5e9;
+    --buildkit-primary-focus: #0284c7;
+    --buildkit-secondary: #9ca3af;
   }
 }
 
 @layer components {
   .buildkit-button {
-    @apply inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 transition-all duration-200;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem 1rem;
+    border: 1px solid transparent;
+    font-size: 0.875rem;
+    font-weight: 500;
+    border-radius: 0.375rem;
+    transition: all 200ms;
+  }
+  
+  .buildkit-button:focus {
+    outline: 2px solid transparent;
+    outline-offset: 2px;
+    box-shadow: 0 0 0 2px var(--buildkit-primary);
   }
 
   .buildkit-input {
-    @apply block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-buildkit-500 focus:border-buildkit-500 sm:text-sm;
+    display: block;
+    width: 100%;
+    padding: 0.5rem 0.75rem;
+    border: 1px solid #d1d5db;
+    border-radius: 0.375rem;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    font-size: 0.875rem;
+  }
+  
+  .buildkit-input:focus {
+    border-color: var(--buildkit-primary);
+    box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.1);
   }
 
   .buildkit-card {
-    @apply bg-white overflow-hidden shadow rounded-lg divide-y divide-gray-200;
+    background-color: white;
+    overflow: hidden;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+    border-radius: 0.5rem;
   }
 
   .dark .buildkit-card {
-    @apply bg-gray-800 divide-gray-700;
+    background-color: #1f2937;
+    border-color: #374151;
   }
 }
 
@@ -61,7 +90,7 @@
   }
 
   .buildkit-tracking-enabled:active::after {
-    @apply bg-buildkit-500;
+    background-color: var(--buildkit-primary);
     opacity: 0.1;
   }
 }

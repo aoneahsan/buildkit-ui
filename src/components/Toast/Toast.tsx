@@ -83,56 +83,6 @@ export const Toast = forwardRef<ToastRef, ToastProps>(({
             'border border-gray-200/20 dark:border-gray-700/20'
           )
         },
-        messageContent: { 
-          className: 'flex items-start p-4' 
-        },
-        messageIcon: { 
-          className: 'text-2xl mr-3 flex-shrink-0' 
-        },
-        messageText: { 
-          className: 'flex-1' 
-        },
-        summary: { 
-          className: 'font-semibold text-gray-900 dark:text-white mb-1' 
-        },
-        detail: { 
-          className: 'text-sm text-gray-600 dark:text-gray-300' 
-        },
-        closeButton: { 
-          className: cn(
-            'ml-3 p-1 rounded',
-            'hover:bg-gray-100 dark:hover:bg-gray-700',
-            'transition-colors duration-200'
-          )
-        },
-        closeIcon: { 
-          className: 'text-gray-400 hover:text-gray-600 dark:hover:text-gray-300' 
-        },
-        // Severity-specific styles
-        'message.success': { 
-          className: 'bg-green-50/90 dark:bg-green-900/20' 
-        },
-        'messageIcon.success': { 
-          className: 'text-green-600 dark:text-green-400' 
-        },
-        'message.info': { 
-          className: 'bg-blue-50/90 dark:bg-blue-900/20' 
-        },
-        'messageIcon.info': { 
-          className: 'text-blue-600 dark:text-blue-400' 
-        },
-        'message.warn': { 
-          className: 'bg-yellow-50/90 dark:bg-yellow-900/20' 
-        },
-        'messageIcon.warn': { 
-          className: 'text-yellow-600 dark:text-yellow-400' 
-        },
-        'message.error': { 
-          className: 'bg-red-50/90 dark:bg-red-900/20' 
-        },
-        'messageIcon.error': { 
-          className: 'text-red-600 dark:text-red-400' 
-        }
       }}
     />
   );
