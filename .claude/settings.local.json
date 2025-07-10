@@ -77,7 +77,9 @@
       "Bash(rollup:*)",
       "Bash(yarn tailwindcss:*)",
       "Bash(yarn list:*)",
-      "Bash(yarn test)"
+      "Bash(yarn test)",
+      "Bash(yarn clean)",
+      "Bash(yarn tsc:*)"
     ],
     "deny": []
   }
