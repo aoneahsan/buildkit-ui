@@ -70,7 +70,8 @@
       "Bash(npm search:*)",
       "Bash(npx rollup:*)",
       "Bash(npm publish:*)",
-      "Bash(node:*)"
+      "Bash(node:*)",
+      "Bash(npm pkg:*)"
     ],
     "deny": []
   }
