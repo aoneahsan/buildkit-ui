@@ -64,7 +64,8 @@
       "WebFetch(domain:pnpmjs.com)",
       "WebFetch(domain:deno.com)",
       "WebFetch(domain:bun.sh)",
-      "Bash(chmod:*)"
+      "Bash(chmod:*)",
+      "Bash(touch:*)"
     ],
     "deny": []
   }

@@ -1,2 +1,2 @@
-// Card component will be implemented
-export const Card = () => null;
+export { Card } from './Card';
+export type { CardProps } from './Card';

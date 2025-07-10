@@ -1,2 +1,5 @@
-// Authentication pages will be exported here
-export {};
+// Authentication Pages
+export * from './auth';
+
+// Common Pages  
+export * from './common';

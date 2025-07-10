@@ -1,2 +1,2 @@
-// DataTable component will be implemented
-export const DataTable = () => null;
+export { DataTable } from './DataTable';
+export type { DataTableProps, DataTableColumn } from './DataTable';

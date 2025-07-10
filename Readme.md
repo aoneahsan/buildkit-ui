@@ -1,5 +1,13 @@
 # BuildKit UI - Capacitor Package for React
 
+## 📚 Documentation
+
+For complete documentation covering every feature in detail, see:
+- **[Complete Guide](docs/COMPLETE_GUIDE.md)** - Comprehensive documentation of all features
+- **[API Reference](docs/API.md)** - Detailed API documentation
+- **[Usage Guide](docs/USAGE.md)** - Usage patterns and examples
+- **[Migration Guide](docs/MIGRATION.md)** - Migrating from other UI libraries
+
 ## 🎯 Project Overview
 
 **BuildKit UI** is a Capacitor package that provides React UI components with comprehensive cross-platform tracking. It ensures every user interaction, error, and analytics event is captured with full platform context across Web, iOS, and Android by leveraging a powerful ecosystem of Capacitor packages.

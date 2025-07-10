@@ -1,2 +1,2 @@
-// Dropdown component will be implemented
-export const Dropdown = () => null;
+export { Dropdown } from './Dropdown';
+export type { DropdownProps, DropdownOption } from './Dropdown';

@@ -1,2 +1,2 @@
-// Dialog component will be implemented
-export const Dialog = () => null;
+export { Dialog } from './Dialog';
+export type { DialogProps } from './Dialog';
