@@ -387,7 +387,7 @@ buildkit-ui/
 ```json
 {
   "name": "buildkit-ui",
-  "version": "1.0.0",
+  "version": "0.0.5",
   "description": "Capacitor package for React with comprehensive cross-platform tracking",
   "main": "dist/plugin.cjs.js",
   "module": "dist/esm/index.js",
@@ -429,7 +429,7 @@ buildkit-ui/
     }
   },
   "dependencies": {
-    "@capacitor/core": "^5.0.0",
+    "@capacitor/core": "^7.0.0",
     "capacitor-auth-manager": "^latest",
     "capacitor-firebase-kit": "^latest",
     "capacitor-biometric-authentication": "^latest",
@@ -450,6 +450,20 @@ buildkit-ui/
   "license": "MIT"
 }
 ```
+
+---
+
+## 🌍 Platform Support
+
+BuildKit UI provides comprehensive support across all platforms:
+
+| Platform | Status | Implementation |
+|----------|--------|----------------|
+| Web | ✅ Full Support | Complete tracking, analytics, error handling, and all features |
+| iOS | ✅ Basic Support | Core plugin structure implemented, full tracking coming in v1.0 |
+| Android | ✅ Basic Support | Core plugin structure implemented, full tracking coming in v1.0 |
+
+**Note**: The current release (v0.0.5) includes full web implementation with basic native iOS/Android plugin structure. Enhanced native tracking features are planned for the v1.0 release. The package is fully functional on all platforms with web-based tracking.
 
 ---
 

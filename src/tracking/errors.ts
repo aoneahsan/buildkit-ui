@@ -1,6 +1,7 @@
 import type { ErrorEvent, Breadcrumb } from '../definitions';
 import type { ErrorTracking } from './types';
 import { getTrackingContext } from './context';
+import { loadSentry } from '../utils/dynamic-imports';
 
 let errorProviders: ErrorTracking = {};
 let isInitialized = false;
@@ -153,7 +154,7 @@ function setupGlobalErrorHandlers(): void {
 // Sentry implementation
 async function initializeSentry(): Promise<void> {
   try {
-    const Sentry = await import('@sentry/react');
+    const Sentry = await loadSentry();
     // Sentry should be initialized with DSN from config
   } catch (error) {
     console.error('Failed to initialize Sentry:', error);
@@ -162,7 +163,7 @@ async function initializeSentry(): Promise<void> {
 
 async function sendToSentry(error: ErrorEvent): Promise<void> {
   try {
-    const Sentry = await import('@sentry/react');
+    const Sentry = await loadSentry();
     
     if (error.severity === 'fatal') {
       Sentry.captureException(new Error(error.message), {
@@ -181,7 +182,7 @@ async function sendToSentry(error: ErrorEvent): Promise<void> {
 
 function addSentryBreadcrumb(breadcrumb: Breadcrumb): void {
   try {
-    import('@sentry/react').then((Sentry) => {
+    loadSentry().then((Sentry) => {
       Sentry.addBreadcrumb({
         message: breadcrumb.message,
         type: breadcrumb.type,

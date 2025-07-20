@@ -1,21 +1,36 @@
 {
   "name": "buildkit-ui",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "**BuildKit UI** is a Capacitor package that provides React UI components with comprehensive cross-platform tracking. It ensures every user interaction, error, and analytics event is captured with full platform context across Web, iOS, and Android by leveraging a powerful ecosystem of Capacitor packages.",
   "main": "dist/plugin.cjs.js",
-  "module": "dist/esm/index.js",
+  "module": "dist/plugin.esm.js",
   "types": "dist/esm/index.d.ts",
   "unpkg": "dist/plugin.js",
+  "exports": {
+    ".": {
+      "import": "./dist/plugin.esm.js",
+      "require": "./dist/plugin.cjs.js",
+      "types": "./dist/esm/index.d.ts"
+    }
+  },
+  "sideEffects": false,
   "files": [
-    "android/src/main/",
+    "android/src/main/**/*.java",
+    "android/src/main/AndroidManifest.xml",
     "android/build.gradle",
     "android/gradle.properties",
     "android/settings.gradle",
     "android/proguard-rules.pro",
-    "dist/",
-    "ios/Plugin/",
+    "dist/esm/**/*.js",
+    "dist/esm/**/*.d.ts",
+    "dist/plugin.js",
+    "dist/plugin.cjs.js",
+    "dist/styles/buildkit-ui.css",
+    "ios/Plugin/**/*.swift",
+    "ios/Plugin/**/*.h",
+    "ios/Plugin/**/*.m",
     "BuildKitUi.podspec",
-    "cli/"
+    "cli/*.js"
   ],
   "author": {
     "email": "aoneahsan@gmail.com",
@@ -30,6 +45,7 @@
   "bugs": {
     "url": "https://github.com/aoneahsan/buildkit-ui/issues"
   },
+  "homepage": "https://github.com/aoneahsan/buildkit-ui",
   "keywords": [
     "capacitor",
     "build",
@@ -51,7 +67,7 @@
     "firebase"
   ],
   "scripts": {
-    "build": "npm run clean && npm run build:css && npm run tsc && rollup -c rollup.config.js",
+    "build": "npm run clean && npm run build:css && npm run tsc && rollup -c rollup.config.production.js",
     "build:css": "yarn tailwindcss -i ./src/styles/input.css -o ./dist/styles/buildkit-ui.css --minify",
     "clean": "rimraf ./dist",
     "tsc": "tsc",
@@ -68,9 +84,9 @@
     "buildkit-ui": "cli/buildkit-ui.js"
   },
   "dependencies": {
-    "@amplitude/analytics-browser": "^2.18.1",
+    "@amplitude/analytics-browser": "^2.20.1",
     "@microsoft/clarity": "^1.0.0",
-    "@sentry/react": "^9.37.0",
+    "@sentry/react": "^9.40.0",
     "clsx": "^2.1.1",
     "date-fns": "^4.1.0",
     "i18next": "^25.3.2",
@@ -82,10 +98,14 @@
   },
   "devDependencies": {
     "@capacitor/android": "^7.4.2",
+    "@capacitor/app": "^7.0.1",
     "@capacitor/cli": "^7.4.2",
     "@capacitor/core": "^7.4.2",
+    "@capacitor/device": "^7.0.1",
     "@capacitor/ios": "^7.4.2",
-    "@eslint/js": "^9.30.1",
+    "@capacitor/network": "^7.0.1",
+    "@capacitor/preferences": "^7.0.1",
+    "@eslint/js": "^10.0.0",
     "@rollup/plugin-commonjs": "^28.0.6",
     "@rollup/plugin-json": "^6.1.0",
     "@rollup/plugin-node-resolve": "^16.0.1",
@@ -96,15 +116,15 @@
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.3.0",
     "@types/jest": "^30.0.0",
-    "@types/node": "^24.0.12",
+    "@types/node": "^24.0.15",
     "@types/react": "^19.1.8",
     "@types/react-dom": "^19.1.6",
-    "@typescript-eslint/eslint-plugin": "^8.36.0",
-    "@typescript-eslint/parser": "^8.36.0",
+    "@typescript-eslint/eslint-plugin": "^8.37.0",
+    "@typescript-eslint/parser": "^8.37.0",
     "autoprefixer": "^10.4.21",
     "chalk": "^5.4.1",
     "commander": "^14.0.0",
-    "eslint": "^9.30.1",
+    "eslint": "^9.31.0",
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^6.0.0",
     "identity-obj-proxy": "^3.0.0",
@@ -115,16 +135,17 @@
     "prettier": "^3.6.2",
     "prompts": "^2.4.2",
     "rimraf": "^6.0.1",
-    "rollup": "^4.44.2",
+    "rollup": "^4.45.1",
     "rollup-plugin-peer-deps-external": "^2.2.4",
     "rollup-plugin-postcss": "^4.0.2",
+    "rollup-plugin-terser": "^7.0.2",
     "tailwindcss": "^4.1.11",
     "ts-jest": "^29.4.0",
     "typescript": "^5.8.3"
   },
   "peerDependencies": {
-    "@capacitor/core": "^7.0.0",
     "@capacitor/app": "^7.0.0",
+    "@capacitor/core": "^7.0.0",
     "@capacitor/device": "^7.0.0",
     "@capacitor/network": "^7.0.0",
     "@capacitor/preferences": "^7.0.0",

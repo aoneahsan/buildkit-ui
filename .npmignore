@@ -1,0 +1,71 @@
+# Source files
+src/
+*.ts
+!dist/**/*.d.ts
+
+# Development files
+node_modules/
+.git/
+.github/
+.vscode/
+*.log
+*.tgz
+
+# Test files
+**/*.test.*
+**/*.spec.*
+tests/
+__tests__/
+coverage/
+.jest/
+jest.config.js
+
+# Build files
+rollup.config.js
+tsconfig.json
+tailwind.config.js
+postcss.config.js
+.eslintrc.json
+.prettierrc
+.nvmrc
+babel.config.js
+
+# Documentation source
+docs/
+
+# Other
+*.map
+**/*.js.map
+.DS_Store
+.env
+.env.*
+project-development-plan/
+yarn.lock
+package-lock.json
+.npmrc
+.gitignore
+.editorconfig
+CLAUDE.md
+
+# Keep only necessary android files
+android/gradle/
+android/gradlew
+android/gradlew.bat
+android/local.properties
+android/.gradle/
+android/.idea/
+android/capacitor-cordova-android-plugins/
+android/**/*.iml
+
+# Keep only necessary ios files  
+ios/Plugin.xcworkspace/
+ios/Plugin.xcodeproj/xcuserdata/
+ios/Plugin.xcodeproj/project.xcworkspace/
+ios/Pods/
+ios/DerivedData/
+ios/**/*.xcworkspace
+ios/**/*.xcuserdata
+
+# Exclude ESM source maps from dist
+dist/**/*.js.map
+dist/esm/**/*.js.map

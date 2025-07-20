@@ -1,13 +1,11 @@
-import React, { ReactNode, useEffect, useState } from 'react';
-import { PrimeReactProvider } from 'primereact/api';
-import { I18nextProvider } from 'react-i18next';
-import i18n from 'i18next';
-import { initReactI18next } from 'react-i18next';
+import React, { ReactNode, useEffect, useState, Suspense, lazy } from 'react';
+import type { i18n as I18n } from 'i18next';
 import { BuildKitUI } from '../index';
 import type { BuildKitConfig } from '../definitions';
 import { TrackingProvider } from './TrackingProvider';
 import { ThemeProvider } from './ThemeProvider';
 import { initializeTracking, initializeWebVitals } from '../tracking';
+import { loadPrimeReact, loadI18next, loadReactI18next, preloadCriticalDependencies } from '../utils/dynamic-imports';
 
 export interface BuildKitProviderProps {
   /**
@@ -28,8 +26,30 @@ export interface BuildKitProviderProps {
   /**
    * Custom i18n instance
    */
-  i18nInstance?: typeof i18n;
+  i18nInstance?: I18n;
 }
+
+// Lazy load the providers
+const LazyProviders = lazy(async () => {
+  const [primeReactModule, reactI18nextModule] = await Promise.all([
+    loadPrimeReact(),
+    loadReactI18next()
+  ]);
+  
+  const PrimeReactProvider = primeReactModule.PrimeReactProvider;
+  const I18nextProvider = reactI18nextModule.I18nextProvider;
+  
+  // Return a component that uses both providers
+  return {
+    default: ({ children, primeConfig, i18n }: { children: ReactNode; primeConfig: any; i18n: I18n }) => (
+      <PrimeReactProvider value={primeConfig || {}}>
+        <I18nextProvider i18n={i18n}>
+          {children}
+        </I18nextProvider>
+      </PrimeReactProvider>
+    )
+  };
+});
 
 export function BuildKitProvider({
   config,
@@ -39,8 +59,11 @@ export function BuildKitProvider({
 }: BuildKitProviderProps) {
   const [isInitialized, setIsInitialized] = useState(false);
   const [initError, setInitError] = useState<Error | null>(null);
+  const [i18n, setI18n] = useState<I18n | null>(i18nInstance || null);
 
   useEffect(() => {
+    // Preload critical dependencies in the background
+    preloadCriticalDependencies();
     initializeBuildKit();
   }, []);
 
@@ -63,7 +86,8 @@ export function BuildKitProvider({
 
       // Initialize i18n if not provided
       if (!i18nInstance && config.i18n) {
-        await initializeI18n(config.i18n);
+        const i18nInst = await initializeI18n(config.i18n);
+        setI18n(i18nInst);
       }
 
       setIsInitialized(true);
@@ -74,7 +98,15 @@ export function BuildKitProvider({
     }
   };
 
-  const initializeI18n = async (i18nConfig: any) => {
+  const initializeI18n = async (i18nConfig: any): Promise<I18n> => {
+    const [i18nextModule, reactI18nextModule] = await Promise.all([
+      loadI18next(),
+      loadReactI18next()
+    ]);
+    
+    const i18n = i18nextModule.default;
+    const { initReactI18next } = reactI18nextModule;
+    
     await i18n
       .use(initReactI18next)
       .init({
@@ -106,12 +138,14 @@ export function BuildKitProvider({
         }
       }
     }
+    
+    return i18n;
   };
 
   const i18nToUse = i18nInstance || i18n;
 
   // Show loading state while initializing
-  if (!isInitialized) {
+  if (!isInitialized || !i18nToUse) {
     return (
       <div className="buildkit-loading flex items-center justify-center min-h-screen">
         <div className="text-center">
@@ -130,11 +164,18 @@ export function BuildKitProvider({
   return (
     <TrackingProvider config={config.tracking}>
       <ThemeProvider config={config.theme}>
-        <PrimeReactProvider value={primeConfig || {}}>
-          <I18nextProvider i18n={i18nToUse}>
+        <Suspense fallback={
+          <div className="buildkit-loading flex items-center justify-center min-h-screen">
+            <div className="text-center">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-buildkit-500 mx-auto"></div>
+              <p className="mt-4 text-gray-600">Loading UI components...</p>
+            </div>
+          </div>
+        }>
+          <LazyProviders primeConfig={primeConfig} i18n={i18nToUse}>
             {children}
-          </I18nextProvider>
-        </PrimeReactProvider>
+          </LazyProviders>
+        </Suspense>
       </ThemeProvider>
     </TrackingProvider>
   );

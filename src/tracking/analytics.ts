@@ -1,5 +1,6 @@
 import type { TrackingEvent } from '../definitions';
 import type { Analytics } from './types';
+import { loadAmplitude, loadClarity, loadSentry } from '../utils/dynamic-imports';
 
 let analyticsProviders: Analytics = {};
 let isInitialized = false;
@@ -143,7 +144,7 @@ async function setFirebaseUserId(userId: string | null): Promise<void> {
 // Amplitude implementation
 async function initializeAmplitude(): Promise<void> {
   try {
-    const amplitude = await import('@amplitude/analytics-browser');
+    const amplitude = await loadAmplitude();
     // Amplitude should be initialized with API key from config
   } catch (error) {
     console.error('Failed to initialize Amplitude:', error);
@@ -152,7 +153,7 @@ async function initializeAmplitude(): Promise<void> {
 
 async function sendToAmplitude(event: TrackingEvent): Promise<void> {
   try {
-    const amplitude = await import('@amplitude/analytics-browser');
+    const amplitude = await loadAmplitude();
     amplitude.track(event.eventName, {
       ...event.parameters,
       component_type: event.componentType,
@@ -164,7 +165,7 @@ async function sendToAmplitude(event: TrackingEvent): Promise<void> {
 
 async function setAmplitudeUserProperties(properties: Record<string, any>): Promise<void> {
   try {
-    const amplitude = await import('@amplitude/analytics-browser');
+    const amplitude = await loadAmplitude();
     const identify = new amplitude.Identify();
     
     Object.entries(properties).forEach(([key, value]) => {
@@ -179,7 +180,7 @@ async function setAmplitudeUserProperties(properties: Record<string, any>): Prom
 
 async function setAmplitudeUserId(userId: string | null): Promise<void> {
   try {
-    const amplitude = await import('@amplitude/analytics-browser');
+    const amplitude = await loadAmplitude();
     amplitude.setUserId(userId);
   } catch (error) {
     console.error('Amplitude user ID error:', error);
@@ -189,7 +190,8 @@ async function setAmplitudeUserId(userId: string | null): Promise<void> {
 // Microsoft Clarity implementation
 async function initializeClarity(): Promise<void> {
   try {
-    const Clarity = (await import('@microsoft/clarity')).default;
+    const clarityModule = await loadClarity();
+    const Clarity = clarityModule.default;
     // Clarity should be initialized with project ID from config
   } catch (error) {
     console.error('Failed to initialize Clarity:', error);
