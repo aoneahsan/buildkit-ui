@@ -69,7 +69,7 @@ export class BuildKitUIWeb extends WebPlugin implements BuildKitUIPlugin {
 
       return { success: true };
     } catch (error) {
-      console.error('BuildKit UI initialization failed:', error);
+      console.warn('BuildKit UI initialization failed:', error);
       return { success: false };
     }
   }
@@ -404,7 +404,7 @@ export class BuildKitUIWeb extends WebPlugin implements BuildKitUIPlugin {
     if (this.config?.tracking.analytics?.firebase && this.config.firebase) {
       try {
         // Firebase would be initialized here
-        console.log('Firebase initialization with config:', this.config.firebase);
+        // Firebase initialization with config
       } catch (error) {
         console.warn('Firebase initialization failed:', error);
       }
@@ -447,12 +447,9 @@ export class BuildKitUIWeb extends WebPlugin implements BuildKitUIPlugin {
   private async sendToFirebaseAnalytics(event: any): Promise<void> {
     try {
       // Firebase would be initialized here
-      console.log('Firebase log event:', {
-        name: event.eventName,
-        params: event.parameters,
-      });
+      // Firebase log event: event.eventName with parameters
     } catch (error) {
-      console.error('Firebase Analytics error:', error);
+      console.warn('Firebase Analytics error:', error);
     }
   }
 
@@ -461,7 +458,7 @@ export class BuildKitUIWeb extends WebPlugin implements BuildKitUIPlugin {
       const amplitude = await import('@amplitude/analytics-browser');
       amplitude.track(event.eventName, event.parameters);
     } catch (error) {
-      console.error('Amplitude error:', error);
+      console.warn('Amplitude error:', error);
     }
   }
 
@@ -470,7 +467,7 @@ export class BuildKitUIWeb extends WebPlugin implements BuildKitUIPlugin {
       const Clarity = (await import('@microsoft/clarity')).default;
       Clarity.event(event.eventName);
     } catch (error) {
-      console.error('Clarity error:', error);
+      console.warn('Clarity error:', error);
     }
   }
 
@@ -492,7 +489,7 @@ export class BuildKitUIWeb extends WebPlugin implements BuildKitUIPlugin {
         body: JSON.stringify(transformedEvent),
       });
     } catch (error) {
-      console.error('Custom analytics error:', error);
+      console.warn('Custom analytics error:', error);
     }
   }
 
@@ -509,20 +506,16 @@ export class BuildKitUIWeb extends WebPlugin implements BuildKitUIPlugin {
         level: error.severity,
       });
     } catch (err) {
-      console.error('Sentry error:', err);
+      console.warn('Sentry error:', err);
     }
   }
 
   private async sendToCrashlytics(error: any): Promise<void> {
     try {
       // Firebase would be initialized here
-      console.log('FirebaseKit.recordException would be called with:', {
-        message: error.message,
-        stack: error.stack,
-        fatal: error.severity === 'fatal',
-      });
+      // FirebaseKit.recordException would be called with error details
     } catch (err) {
-      console.error('Crashlytics error:', err);
+      console.warn('Crashlytics error:', err);
     }
   }
 
@@ -544,7 +537,7 @@ export class BuildKitUIWeb extends WebPlugin implements BuildKitUIPlugin {
         body: JSON.stringify(transformedError),
       });
     } catch (err) {
-      console.error('Custom error tracking error:', err);
+      console.warn('Custom error tracking error:', err);
     }
   }
 
@@ -552,9 +545,9 @@ export class BuildKitUIWeb extends WebPlugin implements BuildKitUIPlugin {
   private async setFirebaseUserProperties(properties: UserProperties): Promise<void> {
     try {
       // Firebase would be initialized here
-      console.log('FirebaseKit.setUserProperties would be called with:', { properties });
+      // FirebaseKit.setUserProperties would be called with properties
     } catch (error) {
-      console.error('Firebase user properties error:', error);
+      console.warn('Firebase user properties error:', error);
     }
   }
 
@@ -571,7 +564,7 @@ export class BuildKitUIWeb extends WebPlugin implements BuildKitUIPlugin {
 
       amplitude.identify(identify);
     } catch (error) {
-      console.error('Amplitude user properties error:', error);
+      console.warn('Amplitude user properties error:', error);
     }
   }
 
@@ -579,18 +572,18 @@ export class BuildKitUIWeb extends WebPlugin implements BuildKitUIPlugin {
   private async startFirebaseTrace(name: string): Promise<void> {
     try {
       // Firebase would be initialized here
-      console.log('FirebaseKit.startTrace would be called with:', { name });
+      // FirebaseKit.startTrace would be called with name
     } catch (error) {
-      console.error('Firebase trace start error:', error);
+      console.warn('Firebase trace start error:', error);
     }
   }
 
   private async stopFirebaseTrace(name: string, metrics?: Record<string, number>): Promise<void> {
     try {
       // Firebase would be initialized here
-      console.log('FirebaseKit.stopTrace would be called with:', { name, metrics });
+      // FirebaseKit.stopTrace would be called with name and metrics
     } catch (error) {
-      console.error('Firebase trace stop error:', error);
+      console.warn('Firebase trace stop error:', error);
     }
   }
 
@@ -602,7 +595,7 @@ export class BuildKitUIWeb extends WebPlugin implements BuildKitUIPlugin {
         this.offlineQueue = JSON.parse(value);
       }
     } catch (error) {
-      console.error('Failed to load offline queue:', error);
+      console.warn('Failed to load offline queue:', error);
     }
   }
 
@@ -613,7 +606,7 @@ export class BuildKitUIWeb extends WebPlugin implements BuildKitUIPlugin {
         value: JSON.stringify(this.offlineQueue),
       });
     } catch (error) {
-      console.error('Failed to save offline queue:', error);
+      console.warn('Failed to save offline queue:', error);
     }
   }
 
@@ -675,7 +668,7 @@ export class BuildKitUIWeb extends WebPlugin implements BuildKitUIPlugin {
         }),
       });
     } catch (error) {
-      console.error('Failed to save session state:', error);
+      console.warn('Failed to save session state:', error);
     }
   }
 

@@ -22,6 +22,7 @@ jest.config.js
 
 # Build files
 rollup.config.js
+rollup.config.production.js
 tsconfig.json
 tailwind.config.js
 postcss.config.js
