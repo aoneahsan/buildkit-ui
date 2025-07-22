@@ -2,6 +2,7 @@
   "name": "buildkit-ui",
   "version": "1.0.0",
   "description": "**BuildKit UI** is a Capacitor package that provides React UI components with comprehensive cross-platform tracking. It ensures every user interaction, error, and analytics event is captured with full platform context across Web, iOS, and Android by leveraging a powerful ecosystem of Capacitor packages.",
+  "type": "module",
   "main": "dist/plugin.cjs.js",
   "module": "dist/plugin.esm.js",
   "types": "dist/esm/index.d.ts",

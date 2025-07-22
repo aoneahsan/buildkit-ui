@@ -3,6 +3,10 @@ import commonjs from '@rollup/plugin-commonjs';
 import json from '@rollup/plugin-json';
 import replace from '@rollup/plugin-replace';
 import { terser } from 'rollup-plugin-terser';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const external = [
   '@capacitor/core',
@@ -24,6 +28,17 @@ const globals = {
   'react': 'React',
   'react-dom': 'ReactDOM',
   'react/jsx-runtime': 'jsxRuntime'
+};
+
+// Custom plugin to resolve unified-tracking correctly
+const unifiedTrackingResolver = {
+  name: 'unified-tracking-resolver',
+  resolveId(source) {
+    if (source === 'unified-tracking') {
+      return path.resolve(__dirname, 'node_modules/unified-tracking/dist/esm/src/index.js');
+    }
+    return null;
+  }
 };
 
 export default [
@@ -53,6 +68,7 @@ export default [
       'tailwind-merge'
     ],
     plugins: [
+      unifiedTrackingResolver,
       replace({
         'process.env.NODE_ENV': JSON.stringify('production'),
         preventAssignment: true,
@@ -88,6 +104,7 @@ export default [
     },
     external,
     plugins: [
+      unifiedTrackingResolver,
       replace({
         'process.env.NODE_ENV': JSON.stringify('production'),
         preventAssignment: true,
@@ -123,6 +140,7 @@ export default [
     },
     external,
     plugins: [
+      unifiedTrackingResolver,
       replace({
         'process.env.NODE_ENV': JSON.stringify('production'),
         preventAssignment: true,
