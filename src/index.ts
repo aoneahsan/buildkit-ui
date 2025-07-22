@@ -30,3 +30,42 @@ export {
   initializeErrorTracking
 } from './tracking';
 export * from './theme';
+
+// Export integrations
+export * as integrations from './integrations';
+
+// Re-export specific integration functions for convenience
+export {
+  // Unified tracking
+  initializeUnifiedTracking,
+  trackUnifiedEvent,
+  trackUnifiedError,
+  isUnifiedTrackingInitialized,
+  
+  // Unified error handling
+  initializeUnifiedErrorHandling,
+  captureUnifiedException,
+  captureUnifiedError,
+  isUnifiedErrorHandlingInitialized,
+  
+  // Firebase kit
+  initializeFirebaseKit,
+  getFirebaseKit,
+  isFirebaseKitInitialized,
+  
+  // Auth manager
+  initializeAuthManager,
+  getAuthManager,
+  isAuthManagerInitialized,
+  
+  // Biometric auth
+  initializeBiometricAuth,
+  authenticateWithBiometrics,
+  isBiometricAuthAvailable,
+  
+  // Native update
+  initializeNativeUpdate,
+  checkForNativeUpdate,
+  downloadNativeUpdate,
+  installNativeUpdate
+} from './integrations';

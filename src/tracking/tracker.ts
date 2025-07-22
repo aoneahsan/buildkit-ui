@@ -3,6 +3,18 @@ import type { TrackingEvent, ErrorEvent } from '../definitions';
 import type { TrackedComponent, InteractionEvent, PerformanceMetrics } from './types';
 import { getTrackingContext } from './context';
 import { addToQueue } from './queue';
+import { 
+  isUnifiedTrackingInitialized, 
+  trackUnifiedEvent, 
+  trackUnifiedError,
+  trackPageView as trackUnifiedPageView,
+  trackTiming
+} from '../integrations/unified-tracking';
+import { 
+  isUnifiedErrorHandlingInitialized, 
+  captureError,
+  addBreadcrumb 
+} from '../integrations/unified-error-handling';
 
 // Component registry to track mounted components
 const componentRegistry = new Map<string, TrackedComponent>();
@@ -18,7 +30,8 @@ export function initializeTracking(): void {
     performanceObserver = new PerformanceObserver((list) => {
       for (const entry of list.getEntries()) {
         if (entry.entryType === 'measure') {
-          trackPerformance(entry.name, entry.duration);
+          // Use Promise.resolve to handle async function
+          void trackPerformance(entry.name, entry.duration);
         }
       }
     });
@@ -143,7 +156,22 @@ export async function trackEvent(event: TrackingEvent): Promise<void> {
   };
 
   try {
-    await BuildKitUI.trackEvent(enrichedEvent);
+    // Try unified tracking first if initialized
+    if (isUnifiedTrackingInitialized()) {
+      await trackUnifiedEvent(enrichedEvent);
+    } else {
+      // Fallback to direct BuildKitUI tracking
+      await BuildKitUI.trackEvent(enrichedEvent);
+    }
+    
+    // Add breadcrumb for error tracking
+    if (isUnifiedErrorHandlingInitialized()) {
+      await addBreadcrumb({
+        message: `Event: ${event.eventName}`,
+        category: 'tracking',
+        data: event.parameters,
+      });
+    }
   } catch (error) {
     console.error('Failed to track event:', error);
     // Add to offline queue
@@ -172,7 +200,18 @@ export async function trackErrorEvent(
   };
 
   try {
-    await BuildKitUI.trackError(errorEvent);
+    // Try unified error handling first if initialized
+    if (isUnifiedErrorHandlingInitialized()) {
+      await captureError(errorEvent, context);
+    }
+    
+    // Also track through unified tracking if available
+    if (isUnifiedTrackingInitialized()) {
+      await trackUnifiedError(errorEvent);
+    } else {
+      // Fallback to direct BuildKitUI tracking
+      await BuildKitUI.trackError(errorEvent);
+    }
   } catch (err) {
     console.error('Failed to track error:', err);
     // Add to offline queue
@@ -187,12 +226,18 @@ export async function trackErrorEvent(
 /**
  * Track performance metrics
  */
-export function trackPerformance(
+export async function trackPerformance(
   metricName: string,
   value: number,
   componentType?: string
-): void {
-  trackEvent({
+): Promise<void> {
+  // Use unified tracking timing if available
+  if (isUnifiedTrackingInitialized()) {
+    await trackTiming('performance', metricName, value, componentType);
+  }
+  
+  // Also track as regular event
+  await trackEvent({
     eventName: 'performance_metric',
     componentType,
     parameters: {
@@ -235,14 +280,20 @@ export function endPerformanceMeasure(measureName: string): number {
 /**
  * Track page view
  */
-export function trackPageView(pageName: string, metadata?: Record<string, any>): void {
-  trackEvent({
-    eventName: 'page_view',
-    parameters: {
-      pageName,
-      ...metadata,
-    },
-  });
+export async function trackPageView(pageName: string, metadata?: Record<string, any>): Promise<void> {
+  // Use unified tracking page view if available
+  if (isUnifiedTrackingInitialized()) {
+    await trackUnifiedPageView(pageName, metadata);
+  } else {
+    // Fallback to regular event tracking
+    await trackEvent({
+      eventName: 'page_view',
+      parameters: {
+        pageName,
+        ...metadata,
+      },
+    });
+  }
 }
 
 /**

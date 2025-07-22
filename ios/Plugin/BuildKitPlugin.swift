@@ -125,14 +125,83 @@ public class BuildKitUIPlugin: CAPPlugin {
     
     private func setupTracking(config: [String: Any]) {
         // Initialize tracking system
+        if let trackingConfig = config["tracking"] as? [String: Any] {
+            if let isEnabled = trackingConfig["enabled"] as? Bool, isEnabled {
+                // Set up tracking with platform context
+                let platformInfo = getPlatformInfoDict()
+                UserDefaults.standard.set(platformInfo, forKey: "buildkit_platform_info")
+            }
+        }
+        
+        // Initialize analytics providers if configured
+        if let analyticsConfig = config["analytics"] as? [String: Any] {
+            setupAnalyticsProviders(analyticsConfig)
+        }
     }
     
     private func logEvent(name: String, parameters: [String: Any], componentType: String?) {
         // Log event to analytics providers
+        var enrichedParams = parameters
+        enrichedParams["sessionId"] = sessionId
+        enrichedParams["timestamp"] = Int(Date().timeIntervalSince1970 * 1000)
+        enrichedParams["platform"] = "ios"
+        
+        if let componentType = componentType {
+            enrichedParams["componentType"] = componentType
+        }
+        
+        // Add platform context
+        if let platformInfo = UserDefaults.standard.dictionary(forKey: "buildkit_platform_info") {
+            enrichedParams["device"] = platformInfo["device"]
+            enrichedParams["appVersion"] = platformInfo["appVersion"]
+        }
+        
+        // Log to console in debug mode
+        #if DEBUG
+        print("[BuildKitUI] Event: \(name), Params: \(enrichedParams)")
+        #endif
+        
+        // Send to configured analytics providers
+        NotificationCenter.default.post(
+            name: Notification.Name("BuildKitUITrackEvent"),
+            object: nil,
+            userInfo: ["eventName": name, "parameters": enrichedParams]
+        )
     }
     
     private func logError(message: String, stack: String?, severity: String, context: [String: Any]) {
         // Log error to error tracking providers
+        var errorInfo: [String: Any] = [
+            "message": message,
+            "severity": severity,
+            "timestamp": Int(Date().timeIntervalSince1970 * 1000),
+            "sessionId": sessionId,
+            "platform": "ios"
+        ]
+        
+        if let stack = stack {
+            errorInfo["stack"] = stack
+        }
+        
+        // Add context
+        errorInfo["context"] = context
+        
+        // Add platform info
+        if let platformInfo = UserDefaults.standard.dictionary(forKey: "buildkit_platform_info") {
+            errorInfo["device"] = platformInfo["device"]
+            errorInfo["appVersion"] = platformInfo["appVersion"]
+            errorInfo["osVersion"] = platformInfo["platformVersion"]
+        }
+        
+        // Log to console
+        print("[BuildKitUI] Error: \(message), Severity: \(severity)")
+        
+        // Send to configured error tracking providers
+        NotificationCenter.default.post(
+            name: Notification.Name("BuildKitUITrackError"),
+            object: nil,
+            userInfo: errorInfo
+        )
     }
     
     private func getNetworkInfo() -> [String: Any] {
@@ -149,5 +218,49 @@ public class BuildKitUIPlugin: CAPPlugin {
         #else
         return false
         #endif
+    }
+    
+    private func getPlatformInfoDict() -> [String: Any] {
+        let device = UIDevice.current
+        
+        return [
+            "platform": "ios",
+            "platformVersion": device.systemVersion,
+            "appVersion": Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "unknown",
+            "buildNumber": Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? "unknown",
+            "device": [
+                "deviceId": device.identifierForVendor?.uuidString ?? "unknown",
+                "model": device.model,
+                "operatingSystem": device.systemName,
+                "osVersion": device.systemVersion,
+                "isSimulator": isSimulator()
+            ]
+        ]
+    }
+    
+    private func setupAnalyticsProviders(_ config: [String: Any]) {
+        // Set up analytics providers based on configuration
+        if let providers = config["providers"] as? [String] {
+            for provider in providers {
+                switch provider {
+                case "firebase":
+                    // Initialize Firebase Analytics if available
+                    NotificationCenter.default.post(
+                        name: Notification.Name("BuildKitUIInitFirebase"),
+                        object: nil,
+                        userInfo: config
+                    )
+                case "amplitude":
+                    // Initialize Amplitude if available
+                    NotificationCenter.default.post(
+                        name: Notification.Name("BuildKitUIInitAmplitude"),
+                        object: nil,
+                        userInfo: config
+                    )
+                default:
+                    print("[BuildKitUI] Unknown analytics provider: \(provider)")
+                }
+            }
+        }
     }
 }

@@ -100,6 +100,25 @@ export interface BuildKitConfig {
    * Internationalization configuration
    */
   i18n?: I18nConfig;
+
+  /**
+   * Debug mode
+   */
+  debug?: boolean;
+
+  /**
+   * Integration configurations
+   */
+  integrations?: {
+    unifiedTracking?: {
+      enabled: boolean;
+      providers?: string[];
+    };
+    unifiedErrorHandling?: {
+      enabled: boolean;
+      providers?: string[];
+    };
+  };
 }
 
 export interface TrackingConfig {
@@ -741,6 +760,11 @@ export interface AmplitudeConfig {
    * Event upload threshold
    */
   eventUploadThreshold?: number;
+
+  /**
+   * Additional options
+   */
+  options?: Record<string, any>;
 }
 
 export interface ClarityConfig {

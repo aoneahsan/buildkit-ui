@@ -11,3 +11,10 @@ export * from './Checkbox';
 export * from './RadioButton';
 export * from './ProgressBar';
 export * from './Layout';
+
+// Capacitor integration components
+export * from './Camera';
+export * from './FileUpload';
+export * from './BiometricPrompt';
+export * from './ScreenView';
+export * from './UpdateManager';

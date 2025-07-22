@@ -3,10 +3,45 @@
 ## 📚 Documentation
 
 For complete documentation covering every feature in detail, see:
+- **[Setup Guide](docs/SETUP_GUIDE.md)** - Step-by-step setup instructions
 - **[Complete Guide](docs/COMPLETE_GUIDE.md)** - Comprehensive documentation of all features
 - **[API Reference](docs/API.md)** - Detailed API documentation
 - **[Usage Guide](docs/USAGE.md)** - Usage patterns and examples
 - **[Migration Guide](docs/MIGRATION.md)** - Migrating from other UI libraries
+
+## ✨ Features
+
+### Core Features
+- 🚀 **React Components with Built-in Tracking** - Every component tracks interactions automatically
+- 📱 **True Cross-Platform** - Web, iOS, and Android support with platform-specific optimizations
+- 📊 **Analytics Integration** - Firebase, Amplitude, and Microsoft Clarity out of the box
+- 🐛 **Error Tracking** - Automatic error capture with Sentry integration
+- 🔐 **Authentication** - 15+ auth providers via capacitor-auth-manager
+- 🔄 **Offline-First** - Queue events offline, sync when online
+- 🎨 **Theme System** - Light/dark mode with customizable themes
+- 🌍 **Internationalization** - Built-in i18n support
+- ♿ **Accessibility** - WCAG 2.1 AA compliant components
+
+### Component Library
+- **Forms** - Input, Button, Checkbox, RadioButton, Dropdown with validation
+- **Data Display** - DataTable, Card, Toast, Dialog, ProgressBar
+- **Layout** - Responsive grid system, navigation components
+- **Native** - Camera, FileUpload, BiometricPrompt, UpdateManager
+- **Pages** - Pre-built Login, Dashboard, Settings pages
+
+### Tracking Capabilities
+- **User Journey Tracking** - Complete session recording
+- **Performance Monitoring** - Component render times, API latencies
+- **Error Boundaries** - Automatic error recovery and reporting
+- **A/B Testing** - Built-in experiment framework
+- **Heatmaps** - Via Microsoft Clarity integration
+
+### Developer Experience
+- **TypeScript** - Full type safety and IntelliSense
+- **Tree-Shaking** - Only import what you use
+- **CSS-in-JS** - Styled with Tailwind CSS
+- **Hot Reload** - Fast development cycle
+- **Debug Mode** - Detailed console logging
 
 ## 🎯 Project Overview
 

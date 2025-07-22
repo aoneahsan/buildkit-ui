@@ -5,6 +5,7 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import com.getcapacitor.JSObject;
+import com.getcapacitor.JSArray;
 import com.getcapacitor.Plugin;
 import com.getcapacitor.PluginCall;
 import com.getcapacitor.PluginMethod;
@@ -152,14 +153,169 @@ public class BuildKitPlugin extends Plugin {
 
     private void setupTracking(JSObject config) {
         // Initialize tracking system
+        JSObject trackingConfig = config.getJSObject("tracking");
+        if (trackingConfig != null && trackingConfig.getBool("enabled", true)) {
+            // Set up tracking with platform context
+            JSObject platformInfo = getPlatformInfoObject();
+            // Store platform info for later use
+            getContext().getSharedPreferences("buildkit_ui", Context.MODE_PRIVATE)
+                .edit()
+                .putString("platform_info", platformInfo.toString())
+                .apply();
+        }
+        
+        // Initialize analytics providers if configured
+        JSObject analyticsConfig = config.getJSObject("analytics");
+        if (analyticsConfig != null) {
+            setupAnalyticsProviders(analyticsConfig);
+        }
     }
 
     private void logEvent(String name, JSObject parameters, String componentType) {
         // Log event to analytics providers
+        JSObject enrichedParams = new JSObject();
+        
+        // Copy existing parameters
+        if (parameters != null) {
+            for (String key : parameters.keys()) {
+                enrichedParams.put(key, parameters.get(key));
+            }
+        }
+        
+        // Add tracking metadata
+        enrichedParams.put("sessionId", sessionId);
+        enrichedParams.put("timestamp", System.currentTimeMillis());
+        enrichedParams.put("platform", "android");
+        
+        if (componentType != null) {
+            enrichedParams.put("componentType", componentType);
+        }
+        
+        // Add platform context
+        try {
+            JSObject deviceInfo = new JSObject();
+            deviceInfo.put("model", Build.MODEL);
+            deviceInfo.put("manufacturer", Build.MANUFACTURER);
+            enrichedParams.put("device", deviceInfo);
+            enrichedParams.put("appVersion", getAppVersion());
+        } catch (Exception e) {
+            // Ignore context errors
+        }
+        
+        // Log to console in debug mode
+        if (BuildConfig.DEBUG) {
+            android.util.Log.d("BuildKitUI", "Event: " + name + ", Params: " + enrichedParams.toString());
+        }
+        
+        // Send to configured analytics providers
+        android.content.Intent intent = new android.content.Intent("com.buildkit.ui.TRACK_EVENT");
+        intent.putExtra("eventName", name);
+        intent.putExtra("parameters", enrichedParams.toString());
+        getContext().sendBroadcast(intent);
     }
 
     private void logError(String message, String stack, String severity, JSObject context) {
         // Log error to error tracking providers
+        JSObject errorInfo = new JSObject();
+        errorInfo.put("message", message);
+        errorInfo.put("severity", severity);
+        errorInfo.put("timestamp", System.currentTimeMillis());
+        errorInfo.put("sessionId", sessionId);
+        errorInfo.put("platform", "android");
+        
+        if (stack != null) {
+            errorInfo.put("stack", stack);
+        }
+        
+        // Add context
+        if (context != null) {
+            errorInfo.put("context", context);
+        }
+        
+        // Add platform info
+        try {
+            JSObject deviceInfo = new JSObject();
+            deviceInfo.put("model", Build.MODEL);
+            deviceInfo.put("osVersion", Build.VERSION.RELEASE);
+            errorInfo.put("device", deviceInfo);
+            errorInfo.put("appVersion", getAppVersion());
+        } catch (Exception e) {
+            // Ignore context errors
+        }
+        
+        // Log to console
+        android.util.Log.e("BuildKitUI", "Error: " + message + ", Severity: " + severity);
+        
+        // Send to configured error tracking providers
+        android.content.Intent intent = new android.content.Intent("com.buildkit.ui.TRACK_ERROR");
+        intent.putExtra("errorInfo", errorInfo.toString());
+        getContext().sendBroadcast(intent);
+    }
+
+    private JSObject getPlatformInfoObject() {
+        Context context = getContext();
+        
+        JSObject deviceInfo = new JSObject();
+        deviceInfo.put("deviceId", getDeviceId());
+        deviceInfo.put("model", Build.MODEL);
+        deviceInfo.put("manufacturer", Build.MANUFACTURER);
+        deviceInfo.put("operatingSystem", "Android");
+        deviceInfo.put("osVersion", Build.VERSION.RELEASE);
+        deviceInfo.put("isSimulator", isEmulator());
+
+        JSObject networkInfo = getNetworkInfo();
+
+        JSObject appState = new JSObject();
+        appState.put("isActive", true);
+        appState.put("sessionId", sessionId);
+        appState.put("sessionStartTime", sessionStartTime);
+
+        JSObject platformInfo = new JSObject();
+        platformInfo.put("platform", "android");
+        platformInfo.put("platformVersion", Build.VERSION.RELEASE);
+        platformInfo.put("appVersion", getAppVersion());
+        platformInfo.put("buildNumber", getBuildNumber());
+        platformInfo.put("device", deviceInfo);
+        platformInfo.put("network", networkInfo);
+        platformInfo.put("appState", appState);
+
+        return platformInfo;
+    }
+
+    private void setupAnalyticsProviders(JSObject config) {
+        // Set up analytics providers based on configuration
+        try {
+            JSArray providers = config.getJSONArray("providers");
+            if (providers != null) {
+                for (int i = 0; i < providers.length(); i++) {
+                    String provider = providers.getString(i);
+                    switch (provider) {
+                        case "firebase":
+                            // Initialize Firebase Analytics if available
+                            android.content.Intent firebaseIntent = new android.content.Intent("com.buildkit.ui.INIT_FIREBASE");
+                            firebaseIntent.putExtra("config", config.toString());
+                            getContext().sendBroadcast(firebaseIntent);
+                            break;
+                        case "amplitude":
+                            // Initialize Amplitude if available
+                            android.content.Intent amplitudeIntent = new android.content.Intent("com.buildkit.ui.INIT_AMPLITUDE");
+                            amplitudeIntent.putExtra("config", config.toString());
+                            getContext().sendBroadcast(amplitudeIntent);
+                            break;
+                        case "clarity":
+                            // Initialize Clarity if available
+                            android.content.Intent clarityIntent = new android.content.Intent("com.buildkit.ui.INIT_CLARITY");
+                            clarityIntent.putExtra("config", config.toString());
+                            getContext().sendBroadcast(clarityIntent);
+                            break;
+                        default:
+                            android.util.Log.d("BuildKitUI", "Unknown analytics provider: " + provider);
+                    }
+                }
+            }
+        } catch (Exception e) {
+            android.util.Log.e("BuildKitUI", "Error setting up analytics providers", e);
+        }
     }
 
     private JSObject getNetworkInfo() {

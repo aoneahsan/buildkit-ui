@@ -16,6 +16,9 @@ export interface TrackingContext {
   userJourney: string[];
   platformInfo: PlatformInfo;
   isTracking: boolean;
+  userProperties?: Record<string, any>;
+  platform?: string;
+  appVersion?: string;
 }
 
 export interface ComponentTrackingProps {

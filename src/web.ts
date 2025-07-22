@@ -400,31 +400,76 @@ export class BuildKitUIWeb extends WebPlugin implements BuildKitUIPlugin {
   }
 
   private async initializeAnalytics(): Promise<void> {
-    // Initialize Firebase Analytics
+    // Try to use unified tracking first
+    const unifiedModule = await import('./integrations/unified-tracking');
+    
+    if (this.config?.integrations?.unifiedTracking?.enabled) {
+      try {
+        await unifiedModule.initializeUnifiedTracking({
+          firebase: this.config.firebase ? {
+            app: undefined,
+            analytics: undefined,
+          } : undefined,
+          amplitude: this.config.tracking.analytics?.amplitude,
+          clarity: this.config.tracking.analytics?.clarity,
+          providers: this.config.integrations.unifiedTracking.providers,
+          debug: this.config.debug,
+        });
+        console.log('Unified tracking initialized successfully');
+        return;
+      } catch (error) {
+        console.warn('Unified tracking initialization failed, falling back to direct initialization:', error);
+      }
+    }
+
+    // Initialize Firebase Analytics directly
     if (this.config?.tracking.analytics?.firebase && this.config.firebase) {
       try {
-        // Firebase would be initialized here
-        // Firebase initialization with config
+        // Check if Firebase is available from capacitor-firebase-kit
+        const firebaseModule = await import('./integrations/firebase-kit');
+        if (firebaseModule.isFirebaseKitInitialized()) {
+          const firebaseKit = firebaseModule.getFirebaseKit();
+          if (firebaseKit?.analytics) {
+            await firebaseKit.analytics.setCollectionEnabled({ enabled: true });
+            console.log('Firebase Analytics initialized via capacitor-firebase-kit');
+          }
+        }
       } catch (error) {
         console.warn('Firebase initialization failed:', error);
       }
     }
 
-    // Initialize Amplitude
+    // Initialize Amplitude directly
     if (this.config?.tracking.analytics?.amplitude) {
       try {
         const amplitude = await import('@amplitude/analytics-browser');
-        amplitude.init(this.config.tracking.analytics.amplitude.apiKey);
+        amplitude.init(this.config.tracking.analytics.amplitude.apiKey, undefined, {
+          ...this.config.tracking.analytics.amplitude.options,
+          defaultTracking: {
+            sessions: true,
+            pageViews: true,
+            formInteractions: true,
+            fileDownloads: true,
+          },
+        });
+        console.log('Amplitude initialized successfully');
       } catch (error) {
         console.warn('Amplitude initialization failed:', error);
       }
     }
 
-    // Initialize Microsoft Clarity
+    // Initialize Microsoft Clarity directly
     if (this.config?.tracking.analytics?.clarity) {
       try {
-        const Clarity = (await import('@microsoft/clarity')).default;
-        Clarity.init(this.config.tracking.analytics.clarity.projectId);
+        // Clarity needs to be loaded via script tag in web
+        if (typeof window !== 'undefined' && !window.clarity) {
+          const script = document.createElement('script');
+          script.type = 'text/javascript';
+          script.async = true;
+          script.src = 'https://www.clarity.ms/tag/' + this.config.tracking.analytics.clarity.projectId;
+          document.head.appendChild(script);
+          console.log('Clarity script loaded successfully');
+        }
       } catch (error) {
         console.warn('Clarity initialization failed:', error);
       }
@@ -446,8 +491,24 @@ export class BuildKitUIWeb extends WebPlugin implements BuildKitUIPlugin {
   // Analytics provider methods
   private async sendToFirebaseAnalytics(event: any): Promise<void> {
     try {
-      // Firebase would be initialized here
-      // Firebase log event: event.eventName with parameters
+      // Use unified tracking if available
+      const unifiedModule = await import('./integrations/unified-tracking');
+      if (unifiedModule.isUnifiedTrackingInitialized()) {
+        await unifiedModule.trackUnifiedEvent(event);
+        return;
+      }
+
+      // Otherwise try capacitor-firebase-kit
+      const firebaseModule = await import('./integrations/firebase-kit');
+      if (firebaseModule.isFirebaseKitInitialized()) {
+        const firebaseKit = firebaseModule.getFirebaseKit();
+        if (firebaseKit?.analytics) {
+          await firebaseKit.analytics.logEvent({
+            name: event.eventName,
+            params: event.parameters,
+          });
+        }
+      }
     } catch (error) {
       console.warn('Firebase Analytics error:', error);
     }
@@ -455,8 +516,21 @@ export class BuildKitUIWeb extends WebPlugin implements BuildKitUIPlugin {
 
   private async sendToAmplitude(event: any): Promise<void> {
     try {
+      // Use unified tracking if available
+      const unifiedModule = await import('./integrations/unified-tracking');
+      if (unifiedModule.isUnifiedTrackingInitialized()) {
+        await unifiedModule.trackUnifiedEvent(event);
+        return;
+      }
+
+      // Otherwise use Amplitude directly
       const amplitude = await import('@amplitude/analytics-browser');
-      amplitude.track(event.eventName, event.parameters);
+      amplitude.track(event.eventName, {
+        ...event.parameters,
+        component_type: event.componentType,
+        session_id: event.sessionId,
+        platform: event.platform,
+      });
     } catch (error) {
       console.warn('Amplitude error:', error);
     }
@@ -464,8 +538,17 @@ export class BuildKitUIWeb extends WebPlugin implements BuildKitUIPlugin {
 
   private async sendToClarity(event: any): Promise<void> {
     try {
-      const Clarity = (await import('@microsoft/clarity')).default;
-      Clarity.event(event.eventName);
+      // Use unified tracking if available
+      const unifiedModule = await import('./integrations/unified-tracking');
+      if (unifiedModule.isUnifiedTrackingInitialized()) {
+        await unifiedModule.trackUnifiedEvent(event);
+        return;
+      }
+
+      // Otherwise use Clarity directly via window object
+      if (typeof window !== 'undefined' && (window as any).clarity) {
+        (window as any).clarity('set', event.eventName, JSON.stringify(event.parameters));
+      }
     } catch (error) {
       console.warn('Clarity error:', error);
     }

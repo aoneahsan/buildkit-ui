@@ -15,6 +15,9 @@ export async function initializeTrackingContext(): Promise<void> {
     userJourney: [],
     platformInfo,
     isTracking: true,
+    userProperties: {},
+    platform: platformInfo.platform,
+    appVersion: platformInfo.appVersion,
   };
 }
 
