@@ -1,6 +1,6 @@
 {
   "name": "buildkit-ui",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "**BuildKit UI** is a Capacitor package that provides React UI components with comprehensive cross-platform tracking. It ensures every user interaction, error, and analytics event is captured with full platform context across Web, iOS, and Android by leveraging a powerful ecosystem of Capacitor packages.",
   "type": "module",
   "main": "dist/plugin.cjs.js",
@@ -102,7 +102,7 @@
     "react-i18next": "^15.6.1",
     "tailwind-merge": "^3.3.1",
     "unified-error-handling": "^1.2.0",
-    "unified-tracking": "^1.2.0"
+    "unified-tracking": "^1.4.0"
   },
   "devDependencies": {
     "@capacitor/android": "^7.4.2",
